@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Browser</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 20px;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul {
+            list-style-type: none;
+        }
+        .directory {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome To Code-Vault</h1>
+        
+        <!-- Link to parent directory (..), but only if we're not at the root -->
+        {% if parent_path is not none %}
+        <ul>
+            <li><a href="{{ url_for('file_browser', subpath=parent_path) }}">../</a></li>
+        </ul>
+        {% endif %}
+
+        <ul>
+            <li><strong>Directories:</strong></li>
+            {% for dir in dirs %}
+            <li><a href="{{ url_for('file_browser', subpath=current_path + '/' + dir) }}">{{ dir | escape }}</a></li>
+            {% endfor %}
+        </ul>
+
+        <ul>
+            <li><strong>Files:</strong></li>
+            {% for file in files %}
+            <li><a href="{{ url_for('file_browser', subpath=current_path + '/' + file) }}">{{ file | escape }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

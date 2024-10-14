@@ -15,6 +15,7 @@ COPY ./src/Front-End /app
 
 # Install Python dependencies
 RUN pip install --no-cache-dir Flask
+RUN pip install Flask-Limiter
 
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
