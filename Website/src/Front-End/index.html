@@ -1,11 +1,19 @@
+<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Flask App</title>
+    <title>Welcome</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>One day this will be a great website</h1>
+<div class="container text-center">
+    <h1 class="mt-5">Welcome to the File Upload/Download Service</h1>
+    <div class="mt-4">
+        <a href="/upload" class="btn btn-primary btn-lg mr-2">Upload a File</a>
+        <a href="/downloads" class="btn btn-secondary btn-lg">Download Files</a>
+    </div>
+</div>
 </body>
 </html>

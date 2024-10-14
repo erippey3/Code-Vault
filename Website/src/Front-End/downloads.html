@@ -1,0 +1,22 @@
+<!-- templates/downloads.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download Files</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Available Files for Download</h1>
+    <ul class="list-group mt-4">
+        {% for file in files %}
+        <li class="list-group-item">
+            <a href="{{ url_for('download', filepath=file) }}">{{ file }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>
