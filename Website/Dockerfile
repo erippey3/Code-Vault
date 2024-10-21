@@ -10,12 +10,11 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy the current directory contents into the container at /app
-COPY ./src/Back-End /app
-COPY ./src/Front-End /app
+COPY ./src/Back-End/ /app
+COPY ./requirements.txt /app
 
 # Install Python dependencies
-RUN pip install --no-cache-dir Flask
-RUN pip install Flask-Limiter
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
