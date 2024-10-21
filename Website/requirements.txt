@@ -3,3 +3,5 @@ Flask-Limiter
 psycopg2-binary
 Flask-SQLAlchemy
 python-dotenv
+Flask-Migrate
+gunicorn

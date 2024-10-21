@@ -7,13 +7,24 @@ services:
     ports:
       - "54003:5000"
     volumes:
-      - ./src/Repository:/mnt/Repository
-      - ./src/Front-End:/app/Front-End
-      - ./src/Databases:/app/Databases
+      - ./Repository:/mnt/Repository
     env_file:
-      - .dockerenv
+      - .env
     depends_on:
       - db
+    entrypoint: ["/entrypoint.sh"]
+    command: ["gunicorn", "-b", ":5000", "manage:app"]
+
+  migrate:
+    build: .
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - ./Repository:/mnt/Repository
+    entrypoint: ["/entrypoint.sh"]
+    command: ["flask", "db", "upgrade"]
 
   db:
     image: postgres:13
@@ -24,6 +35,11 @@ services:
       POSTGRES_DB: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

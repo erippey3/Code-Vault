@@ -4,20 +4,24 @@ FROM python:3.9-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Install Git and any other dependencies
+# Install dependencies
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git && \
+    apt-get install -y --no-install-recommends git postgresql-client libpq-dev && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy the current directory contents into the container at /app
-COPY ./src/Back-End/ /app
-COPY ./requirements.txt /app
-
-# Install Python dependencies
+# Copy requirements and install Python dependencies
+COPY ./requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 5000 available to the world outside this container
+# Copy the rest of the application code
+COPY ./src /app
+
+# Copy entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Expose port 5000
 EXPOSE 5000
 
-# Define the command to run the application
-CMD ["python", "main.py"]
+# Set default command (can be overridden in docker-compose)
+CMD ["gunicorn", "-b", ":5000", "manage:app"]
