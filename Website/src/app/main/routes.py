@@ -7,7 +7,7 @@ from . import main
 
 @main.route('/favicon.ico')
 def favicon():
-    return send_from_directory(current_app.template_folder,
+    return send_from_directory(main.template_folder,
                                'vault.ico', mimetype='image/vnd.microsoft.icon')
 
 
@@ -17,8 +17,9 @@ def allowed_file(filename):
 
 @main.route('/')
 @main.route('/<path:subpath>')
-@limiter.limit("100 per minute")
+@limiter.limit("40 per minute")
 def file_browser(subpath=''):
+    print(current_app.template_folder)
     full_path = os.path.abspath(os.path.join(current_app.config['UPLOAD_FOLDER'], subpath))
     
     if not full_path.startswith(os.path.abspath(current_app.config['UPLOAD_FOLDER'])):

@@ -138,21 +138,21 @@
         <!-- Link to parent directory (..), but only if we're not at the root -->
         {% if parent_path is not none %}
         <ul>
-            <li><a href="{{ url_for('file_browser', subpath=parent_path) }}">../</a></li>
+            <li><a href="{{ url_for('main.file_browser', subpath=parent_path) }}">../</a></li>
         </ul>
         {% endif %}
 
         <ul>
             <li><strong>Directories:</strong></li>
             {% for dir in dirs %}
-            <li><a href="{{ url_for('file_browser', subpath=current_path + '/' + dir) }}">{{ dir | escape }}</a></li>
+            <li><a href="{{ url_for('main.file_browser', subpath=current_path + '/' + dir) }}">{{ dir | escape }}</a></li>
             {% endfor %}
         </ul>
 
         <ul>
             <li><strong>Files:</strong></li>
             {% for file in files %}
-            <li><a href="{{ url_for('file_browser', subpath=current_path + '/' + file) }}">{{ file | escape }}</a></li>
+            <li><a href="{{ url_for('main.file_browser', subpath=current_path + '/' + file) }}">{{ file | escape }}</a></li>
             {% endfor %}
         </ul>
     </div>
