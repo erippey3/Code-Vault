@@ -129,9 +129,24 @@
                 align-items: flex-start;
             }
         }
+
+        .top-right {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
     </style>
 </head>
 <body>
+    {% if session.get('username') %}
+        <div class="top-right">
+            Hello, {{ session['username'] }}! <a href="{{ url_for('auth.logout') }}">Logout</a>
+        </div>
+    {% else %}
+        <div class="top-right">
+            <a href="{{ url_for('auth.login') }}">Sign In with GitHub</a>
+        </div>
+    {% endif %}
     <div class="container">
         <h1>Welcome To Code-Vault</h1>
         
