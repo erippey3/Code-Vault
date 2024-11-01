@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  #Main service running flask
   web:
     build: .
     restart: unless-stopped
@@ -10,11 +11,14 @@ services:
       - ./Repository:/mnt/Repository
     env_file:
       - .env
+      - secret.env #you will not find this file in the git repo
     depends_on:
       - db
+      - redis  # Add redis as a dependency
     entrypoint: ["/entrypoint.sh"]
     command: ["gunicorn", "-b", ":5000", "manage:app"]
 
+  #This is for migradting the database
   migrate:
     build: .
     env_file:
@@ -26,6 +30,7 @@ services:
     entrypoint: ["/entrypoint.sh"]
     command: ["flask", "db", "upgrade"]
 
+  #Postgress is the database for almost all data storage
   db:
     image: postgres:13
     restart: unless-stopped
@@ -40,6 +45,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  #Redis here is for the Flask Rate Limiter
+  redis:  
+    image: redis:6
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
 
 volumes:
   postgres_data:
