@@ -9,6 +9,9 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SECRET_KEY = os.getenv('SECRET_KEY', 'here_is_the_key_for_our_project')  
     UPLOAD_FOLDER = os.path.abspath(os.environ.get('REPO_DIR'))
+    SESSION_COOKIE_SECURE=True  # Only send cookie over HTTPS
+    SESSION_COOKIE_HTTPONLY=True  # Prevent JavaScript access to cookie
+    SESSION_COOKIE_SAMESITE='Lax'  # Protect against CSRF
 
 
     ALLOWED_EXTENSIONS = {
