@@ -5,3 +5,7 @@ Flask-SQLAlchemy
 python-dotenv
 Flask-Migrate
 gunicorn
+redis
+Flask-WTF
+flask-talisman
+Flask-Dance
