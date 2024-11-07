@@ -9,3 +9,4 @@ redis
 Flask-WTF
 flask-talisman
 Flask-Dance
+whitenoise
