@@ -31,6 +31,14 @@ def login():
                             email = e.get('email')
                             break
 
+            if not email:
+                flash('No email address associated with your GitHub account')
+                return redirect(url_for('main.file_browser'))
+            
+            if not email.endswith('@vt.edu'):
+                flash('You must have an email associated with Virginia Tech to use this application')
+                return redirect(url_for('main.file_browser'))
+
             # Check if user exists
             user = User.query.filter_by(github_id=github_id).first()
             if not user:
@@ -45,7 +53,7 @@ def login():
             return redirect(url_for('main.file_browser'))
 
         flash('Failed to fetch user info from GitHub.')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.file_browser'))
 
 
 
