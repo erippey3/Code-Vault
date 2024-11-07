@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Install dependencies
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git postgresql-client libpq-dev && \
+    apt-get install -y --no-install-recommends git postgresql-client libpq-dev iputils-ping curl && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies
