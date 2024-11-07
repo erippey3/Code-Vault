@@ -12,6 +12,8 @@ class Config:
     SESSION_COOKIE_SECURE=True  # Only send cookie over HTTPS
     SESSION_COOKIE_HTTPONLY=True  # Prevent JavaScript access to cookie
     SESSION_COOKIE_SAMESITE='Lax'  # Protect against CSRF
+    SERVER_NAME= os.getenv('SERVER_NAME', '192.168.44.4:54003')
+    PREFERRED_URL_SCHEME = os.getenv('PREFERRED_URL_SCHEME', 'http')
 
 
     ALLOWED_EXTENSIONS = {
