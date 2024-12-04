@@ -19,7 +19,6 @@ def allowed_file(filename):
 @main.route('/<path:subpath>')
 @limiter.limit("40 per minute")
 def file_browser(subpath=''):
-    print(current_app.template_folder)
     full_path = os.path.abspath(os.path.join(current_app.config['UPLOAD_FOLDER'], subpath))
     
     if not full_path.startswith(os.path.abspath(current_app.config['UPLOAD_FOLDER'])):

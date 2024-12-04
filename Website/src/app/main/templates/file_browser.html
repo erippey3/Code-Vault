@@ -144,7 +144,7 @@
         </div>
     {% else %}
         <div class="top-right">
-            <a href="{{ url_for('auth.login') }}">Sign In with GitHub</a>
+            <a href="{{ url_for('auth.login', provider='github') }}">Sign In with GitHub</a>
         </div>
     {% endif %}
     <div class="container">
