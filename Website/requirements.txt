@@ -10,3 +10,5 @@ Flask-WTF
 flask-talisman
 Flask-Dance
 whitenoise
+redis
+Flask-Session
