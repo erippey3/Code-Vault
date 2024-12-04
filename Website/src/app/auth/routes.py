@@ -104,7 +104,7 @@ def login_callback(provider):
         abort(401)
 
     profile_data = profile_response.json()
-    github_id = profile_data.get('id')
+    github_id = str(profile_data.get('id'))
     username = profile_data.get('login')
 
     if not github_id or not username:
