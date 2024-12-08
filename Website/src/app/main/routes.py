@@ -1,4 +1,4 @@
-from flask import render_template, send_from_directory, abort, current_app
+from flask import render_template, request, send_from_directory, abort, current_app
 import os
 from app.extensions import limiter
 from . import main
@@ -36,3 +36,22 @@ def file_browser(subpath=''):
         if not allowed_file(os.path.basename(subpath)):
             return "File type not allowed", 403
         return send_from_directory(os.path.dirname(full_path), os.path.basename(subpath))
+    
+
+@main.route('/search')
+def search_projects():
+    query_param = request.args.get('q', '')
+    tags = request.args.getlist('tags')  # multiple checkbox values
+
+    # TODO: Implement Elasticsearch query here
+    # For now, let's fake it:
+    projects = []  # This would be a list of dicts from Elasticsearch hits
+    # Example:
+    # projects = [
+    #    {"id": 1, "name": "Project Alpha", "language": "Python", "tags": ["GUI", "DATA STRUCTURES"]},
+    #    {"id": 2, "name": "Project Beta", "language": "Java", "tags": ["FILE PARSING"]}
+    # ]
+
+    return render_template('search_results.html', projects=projects)
+
+

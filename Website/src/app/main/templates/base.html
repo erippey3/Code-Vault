@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Vault</title>
+    <style>
+        /* Base Styling */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--gradient-background);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        :root {
+            --text-color: #333;
+            --link-color: #007bff;
+            --card-background: #ffffff;
+            --card-shadow: rgba(0, 0, 0, 0.1);
+            --gradient-background: linear-gradient(135deg, #4e54c8, #8f94fb);
+        }
+
+        /* Top Bar Styles */
+        .top-bar {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+        }
+
+        .top-bar form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-bar input[type="text"] {
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .top-bar button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            background: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .top-bar button:hover {
+            background: #0056b3;
+        }
+
+        .top-bar a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .top-bar a:hover {
+            color: #ff6b6b;
+        }
+
+        /* Filters Sidebar */
+        .filters {
+            position: absolute;
+            top: 60px; /* below the top bar */
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(5px);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--card-shadow);
+        }
+
+        .filters h3 {
+            margin-top: 0;
+        }
+
+        .filters form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .filters label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .filters button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            background: #007bff;
+            color: #fff;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .filters button:hover {
+            background: #0056b3;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 100px; /* space for the top bar */
+        }
+
+        /* Container for directories/files */
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background: var(--card-background);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--card-shadow);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--link-color);
+            transition: color 0.3s, transform 0.2s;
+        }
+
+        a:hover {
+            color: #ff6b6b;
+            transform: scale(1.05);
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px 0;
+            padding: 15px;
+            background: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--card-shadow);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+
+        li:hover {
+            transform: translateY(-5px);
+        }
+
+        li::before {
+            content: '\1F4C1'; /* folder icon */
+            font-size: 1.5em;
+            margin-right: 15px;
+        }
+
+        li.file::before {
+            content: '\1F4C4';
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                margin: 10px;
+            }
+
+            .filters {
+                left: 10px;
+                right: 10px;
+                width: auto;
+            }
+        }
+
+        .add-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #007bff;
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 50px;
+            font-size: 16px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 2px 10px var(--card-shadow);
+        }
+
+        .add-button:hover {
+            background: #0056b3;
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="top-bar">
+        <form action="{{ url_for('main.search_projects') }}" method="get">
+            <input type="text" name="q" placeholder="Search for snippets..." />
+            <button type="submit">Search</button>
+        </form>
+        {% if session.get('username') %}
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ url_for('auth.login', provider='github') }}">Login</a>
+        {% endif %}
+    </div>
+
+    <div class="filters">
+        <h3>OR FILTER BY</h3>
+        <form action="{{ url_for('main.search_projects') }}" method="get">
+            <label><input type="checkbox" name="tags" value="GUI">GUI</label>
+            <label><input type="checkbox" name="tags" value="FILE PARSING">File Parsing</label>
+            <label><input type="checkbox" name="tags" value="DATA STRUCTURES">Data Structures</label>
+            <button type="submit">Apply Filters</button>
+        </form>
+    </div>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <a href="{{ url_for('main.file_browser') }}" class="add-button">+ ADD A SNIPPET</a>
+</body>
+</html>
