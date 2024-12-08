@@ -19,6 +19,10 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
+    # elastic search management
+    ELASTICSEARCH_USER = os.getenv('ELASTICSEARCH_USER', 'elastic')
+    ELASTICSEARCH_PASSWORD = os.getenv('ELASTICSEARCH_PASSWORD', 'elastic')
+
 
     #session settings
     SESSION_TYPE= 'redis'

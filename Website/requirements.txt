@@ -12,3 +12,4 @@ Flask-Dance
 whitenoise
 redis
 Flask-Session
+elasticsearch
