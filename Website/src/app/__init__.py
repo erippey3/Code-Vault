@@ -35,7 +35,7 @@ def register_session_endpoints(app):
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='static')
     app.debug = True
     app.config.from_object(Config)
 
@@ -59,6 +59,8 @@ def create_app():
     app.register_blueprint(main_blueprint)
     from app.auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
+    from app.fileIO import fileIO as fileIO_blueprint
+    app.register_blueprint(fileIO_blueprint)
 
 
     register_error_handlers(app)

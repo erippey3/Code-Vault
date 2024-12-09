@@ -7,7 +7,7 @@ from . import main
 
 @main.route('/favicon.ico')
 def favicon():
-    return send_from_directory('vault.ico', mimetype='image/vnd.microsoft.icon')
+    return send_from_directory('templates', 'vault.ico', mimetype='image/vnd.microsoft.icon')
 
 
 def allowed_file(filename):

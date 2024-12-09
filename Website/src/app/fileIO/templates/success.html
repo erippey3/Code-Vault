@@ -1,9 +1,8 @@
-<!-- templates/failure.html -->
+<!-- templates/success.html -->
 {% extends "file-base.html" %}
 {% block content %}
 <div style="text-align:center;">
-    <p>You must be logged in to upload snippets</p>
+    <p>Thank you for your upload request</p>
     <a href="{{ url_for('main.file_browser') }}" class="btn">Home</a>
-    <a href="{{ url_for('auth.login', provider='github') }}" class="btn">Login</a>
 </div>
 {% endblock %}

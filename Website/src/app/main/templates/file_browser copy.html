@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Welcome To Code-Vault</h1>
+    
+    {% if parent_path is not none %}
+        <ul>
+            <li><a href="{{ url_for('main.file_browser', subpath=parent_path) }}">../</a></li>
+        </ul>
+    {% endif %}
+
+    <ul>
+        <li><strong>Directories:</strong></li>
+        {% for dir in dirs %}
+        <li><a href="{{ url_for('main.file_browser', subpath=current_path + '/' + dir) }}">{{ dir | escape }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <ul>
+        <li><strong>Files:</strong></li>
+        {% for file in files %}
+        <li class="file"><a href="{{ url_for('main.file_browser', subpath=current_path + '/' + file) }}">{{ file | escape }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

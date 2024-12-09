@@ -1,0 +1,44 @@
+<!-- templates/file-base.html -->
+<!DOCTYPE html>
+<html lang="en" data-theme="light"> <!-- data-theme to allow theme toggling -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Vault</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-and-theme">
+            <!-- A simple logo or title -->
+            <h2>Code Vault</h2>
+            <button class="theme-toggle" aria-label="Toggle Dark Mode">&#9790;</button>
+        </div>
+        <nav class="nav-links">
+            <a href="{{ url_for('main.file_browser') }}">Home</a>
+        </nav>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <script>
+        // Toggle Dark Mode
+        const themeToggle = document.querySelector('.theme-toggle');
+        const htmlEl = document.documentElement;
+        themeToggle.addEventListener('click', () => {
+            if (htmlEl.getAttribute('data-theme') === 'light') {
+                htmlEl.setAttribute('data-theme', 'dark');
+            } else {
+                htmlEl.setAttribute('data-theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>

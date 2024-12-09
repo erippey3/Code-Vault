@@ -1,2 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- templates/upload.html -->
+{% extends "file-base.html" %}
+{% block content %}
+<h1>Upload Snippet</h1>
+<form action="{{ url_for('fileIO.upload_snippet') }}" method="POST" enctype="multipart/form-data" class="modern-form">
+
+    <div class="form-group">
+        <label for="snippet_name">Name of Snippet</label>
+        <input type="text" id="snippet_name" name="snippet_name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="file">Upload File (or folder):</label>
+        <input type="file" id="file" name="file" required>
+    </div>
+
+    <h2>Select Language</h2>
+    <div class="radio-group">
+        <label><input type="radio" name="language" value="C" required> C</label>
+        <label><input type="radio" name="language" value="C++"> C++</label>
+        <label><input type="radio" name="language" value="Java"> Java</label>
+    </div>
+
+    <p>Don't see your language?</p>
+    <p><a href="{{ url_for('fileIO.new_language') }}">Submit a request</a></p>
+
+    <h2>Select Tags</h2>
+    <div class="checkbox-group">
+        <label><input type="checkbox" name="tags" value="gui"> GUI</label>
+        <label><input type="checkbox" name="tags" value="data_structure"> Data Structure</label>
+        <label><input type="checkbox" name="tags" value="file_parsing"> File Parsing</label>
+        <label><input type="checkbox" name="tags" value="math"> Math</label>
+        <label><input type="checkbox" name="tags" value="multithreading"> Multithreading</label>
+        <label><input type="checkbox" name="tags" value="networking"> Networking Utils</label>
+        <label><input type="checkbox" name="tags" value="logging"> Logging</label>
+    </div>
+
+    <p>Don't see your tags?</p>
+    <p><a href="{{ url_for('fileIO.new_tag') }}">Submit a request</a></p>
+
+    <button type="submit" class="primary-button">Submit</button>
+</form>
+{% endblock %}

@@ -1,0 +1,19 @@
+<!-- templates/new-language.html -->
+{% extends "file-base.html" %}
+{% block content %}
+<h1>New Language Request</h1>
+<form action="{{ url_for('fileIO.new_language') }}" method="POST" class="modern-form">
+
+    <div class="form-group">
+        <label for="language_name">Language name</label>
+        <input type="text" id="language_name" name="language_name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="language_desc">Description of need for new language</label>
+        <textarea id="language_desc" name="language_desc" rows="5" required></textarea>
+    </div>
+
+    <button type="submit" class="primary-button">Submit</button>
+</form>
+{% endblock %}

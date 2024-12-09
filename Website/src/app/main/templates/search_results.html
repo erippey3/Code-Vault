@@ -4,11 +4,24 @@
 <div class="container">
     <h1>Search Results</h1>
     {% if projects %}
-        <ul>
+        <ul class="search-results-list">
             {% for project in projects %}
-            <li>
-                <a href="{{ url_for('project_detail', project_id=project.id) }}">{{ project.name }}</a>
-                <span>(Language: {{ project.language }}, Tags: {{ project.tags|join(', ') }})</span>
+            <li class="search-result">
+                <span class="icon">
+                    <!-- Use a generic icon, e.g., a file icon or magnifying glass -->
+                    <svg width="24" height="24" fill="currentColor" aria-hidden="true">
+                        <path d="M13 2H6c-1.1 0-2 .9-2 
+                        2v16c0 1.1.9 2 2 2h12c1.1 0 
+                        2-.9 2-2V9l-7-7z"></path>
+                    </svg>
+                </span>
+                <div class="search-details">
+                    <a href="{{ url_for('project_detail', project_id=project.id) }}">{{ project.name }}</a>
+                    <div class="meta">
+                        <span>Language: {{ project.language }}</span>
+                        <span>Tags: {{ project.tags|join(', ') }}</span>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>

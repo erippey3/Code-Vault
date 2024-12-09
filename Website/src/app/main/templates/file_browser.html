@@ -2,25 +2,57 @@
 
 {% block content %}
 <div class="container">
-    <h1>Welcome To Code-Vault</h1>
+    {% set current_dir = current_path.split('/')[-1] if current_path else '' %}
+    <h1>
+        {% if not current_path %}
+            Welcome to Code-Vault
+        {% else %}
+            {{ current_dir | escape }}
+        {% endif %}
+    </h1>
     
     {% if parent_path is not none %}
-        <ul>
-            <li><a href="{{ url_for('main.file_browser', subpath=parent_path) }}">../</a></li>
+        <ul class="up-directory">
+            <li>
+                <a href="{{ url_for('main.file_browser', subpath=parent_path) }}" title="Go up one directory">
+                    <!-- Up Arrow Icon -->
+                    <svg width="20" height="20" fill="currentColor" aria-hidden="true" style="vertical-align:middle;">
+                        <path d="M10 4l-6 6h12z"></path>
+                    </svg>
+                    Up
+                </a>
+            </li>
         </ul>
     {% endif %}
 
-    <ul>
-        <li><strong>Directories:</strong></li>
+    <h2>Directories</h2>
+    <ul class="directories-list">
         {% for dir in dirs %}
-        <li><a href="{{ url_for('main.file_browser', subpath=current_path + '/' + dir) }}">{{ dir | escape }}</a></li>
+        <li class="directory">
+            <span class="icon">
+                <svg width="24" height="24" fill="currentColor" aria-hidden="true">
+                    <path d="M10 4H4C2.9 4 2 4.9 2 6v12c0 
+                    1.1 0.9 2 2 2h16c1.1 0 2-0.9 2-2V8c0-1.1-0.9-2-2-2h-8l-2-2z"></path>
+                </svg>
+            </span>
+            <a href="{{ url_for('main.file_browser', subpath=current_path ~ '/' ~ dir) }}">{{ dir | escape }}</a>
+        </li>
         {% endfor %}
     </ul>
 
-    <ul>
-        <li><strong>Files:</strong></li>
+    <h2>Files</h2>
+    <ul class="files-list">
         {% for file in files %}
-        <li class="file"><a href="{{ url_for('main.file_browser', subpath=current_path + '/' + file) }}">{{ file | escape }}</a></li>
+        <li class="file">
+            <span class="icon">
+                <svg width="24" height="24" fill="currentColor" aria-hidden="true">
+                    <path d="M13 2H6c-1.1 0-2 .9-2 
+                    2v16c0 1.1.9 2 2 2h12c1.1 0 
+                    2-.9 2-2V9l-7-7z"></path>
+                </svg>
+            </span>
+            <a href="{{ url_for('main.file_browser', subpath=current_path ~ '/' ~ file) }}">{{ file | escape }}</a>
+        </li>
         {% endfor %}
     </ul>
 </div>
