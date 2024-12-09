@@ -25,6 +25,12 @@
         </ul>
     {% endif %}
 
+    {% if project_path %}
+        <form action="{{ url_for('fileIO.download_project', subpath=project_path) }}" method="get">
+            <button type="submit" class="primary-button">Download Project</button>
+        </form> 
+    {% endif %}
+
     <h2>Directories</h2>
     <ul class="directories-list">
         {% for dir in dirs %}

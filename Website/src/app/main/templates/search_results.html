@@ -16,7 +16,7 @@
                     </svg>
                 </span>
                 <div class="search-details">
-                    <a href="{{ url_for('project_detail', project_id=project.id) }}">{{ project.name }}</a>
+                    <a href="{{ url_for('main.file_browser', subpath=project.path) }}">{{ project.name }}</a>
                     <div class="meta">
                         <span>Language: {{ project.language }}</span>
                         <span>Tags: {{ project.tags|join(', ') }}</span>
