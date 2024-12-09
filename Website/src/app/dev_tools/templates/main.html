@@ -1,0 +1,22 @@
+<a href="{{ url_for('dev_tools.delete_databases') }}" onclick="return confirmDelete();">Delete Database</a>
+
+<script>
+    function confirmDelete() {
+        if (confirm('Are you sure you want to delete the database?')) {
+            fetch('{{ url_for("dev_tools.delete_databases") }}', { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Delete request successful!');
+                        location.reload(); // Optionally reload the page
+                    } else {
+                        alert('Delete request failed: ' + response.statusText);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred: ' + error.message);
+                });
+        }
+        return false; // Prevent the default link action
+    }
+</script>

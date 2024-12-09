@@ -63,6 +63,8 @@ def create_app():
     app.register_blueprint(auth_blueprint)
     from app.fileIO import fileIO as fileIO_blueprint
     app.register_blueprint(fileIO_blueprint)
+    from app.dev_tools import dev_tools as dev_blueprint
+    app.register_blueprint(dev_blueprint)
 
 
     register_error_handlers(app)

