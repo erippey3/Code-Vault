@@ -2,8 +2,7 @@
 {% extends "file-base.html" %}
 {% block content %}
 <h1>Upload Snippet</h1>
-<form action="{{ url_for('fileIO.upload_snippet') }}" method="POST" enctype="multipart/form-data" class="modern-form">
-
+<form id="uploadForm" method="POST" enctype="multipart/form-data" class="modern-form">
     <div class="form-group">
         <label for="snippet_name">Name of Snippet</label>
         <input type="text" id="snippet_name" name="snippet_name" required>
@@ -11,7 +10,8 @@
 
     <div class="form-group">
         <label for="file">Upload File (or folder):</label>
-        <input type="file" id="file" name="file" required>
+        <!-- webkitdirectory to allow folder upload -->
+        <input type="file" id="file" name="files" required multiple webkitdirectory directory>
     </div>
 
     <h2>Select Language</h2>
@@ -21,23 +21,79 @@
         <label><input type="radio" name="language" value="Java"> Java</label>
     </div>
 
-    <p>Don't see your language?</p>
-    <p><a href="{{ url_for('fileIO.new_language') }}">Submit a request</a></p>
-
     <h2>Select Tags</h2>
     <div class="checkbox-group">
-        <label><input type="checkbox" name="tags" value="gui"> GUI</label>
-        <label><input type="checkbox" name="tags" value="data_structure"> Data Structure</label>
-        <label><input type="checkbox" name="tags" value="file_parsing"> File Parsing</label>
-        <label><input type="checkbox" name="tags" value="math"> Math</label>
-        <label><input type="checkbox" name="tags" value="multithreading"> Multithreading</label>
-        <label><input type="checkbox" name="tags" value="networking"> Networking Utils</label>
-        <label><input type="checkbox" name="tags" value="logging"> Logging</label>
+        <label><input type="checkbox" name="tags" value="GUI"> GUI</label>
+        <label><input type="checkbox" name="tags" value="Data Structure"> Data Structure</label>
+        <label><input type="checkbox" name="tags" value="File Parsing"> File Parsing</label>
+        <label><input type="checkbox" name="tags" value="Math"> Math</label>
+        <label><input type="checkbox" name="tags" value="Multithreading"> Multithreading</label>
+        <label><input type="checkbox" name="tags" value="Networking Utils"> Networking Utils</label>
+        <label><input type="checkbox" name="tags" value="Logging"> Logging</label>
     </div>
-
-    <p>Don't see your tags?</p>
-    <p><a href="{{ url_for('fileIO.new_tag') }}">Submit a request</a></p>
 
     <button type="submit" class="primary-button">Submit</button>
 </form>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip/dist/jszip.min.js"></script>
+<script>
+document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const files = document.getElementById('file').files;
+    if (!files.length) {
+        alert("No files selected!");
+        return;
+    }
+
+    // Gather form data
+    const snippetName = form.querySelector('input[name="snippet_name"]').value;
+    const language = form.querySelector('input[name="language"]:checked').value;
+    const tagEls = form.querySelectorAll('input[name="tags"]:checked');
+    const tags = Array.from(tagEls).map(el => el.value);
+
+    const zip = new JSZip();
+    // Add files to zip
+    for (const file of files) {
+        const fileData = await file.arrayBuffer();
+        // file.webkitRelativePath helps preserve directory structure
+        zip.file(file.webkitRelativePath, fileData);
+    }
+
+    // Generate the zip file
+    const zippedBlob = await zip.generateAsync({ type: "blob" });
+
+    // Prepare FormData
+    const formData = new FormData();
+    formData.append('snippet_name', snippetName);
+    formData.append('language', language);
+    tags.forEach(t => formData.append('tags', t));
+    formData.append('file', zippedBlob, 'archive.zip');
+
+    // Send via Fetch API
+    const response = await fetch('{{ url_for("fileIO.upload_snippet") }}', {
+       method: 'POST',
+       body: formData
+    });
+
+    if (response.ok) {
+        // Dynamically create the file_browser URL
+        const snippetName = form.querySelector('input[name="snippet_name"]').value;
+        const language = form.querySelector('input[name="language"]:checked').value;
+        const tags = form.querySelectorAll('input[name="tags"]:checked');
+        const targetTag = tags.length > 0 ? tags[0].value : ''; // Use the first tag if available
+
+        // Construct the subpath
+        const subpath = [language, targetTag, snippetName]
+            .filter(part => part) // Filter out empty parts (e.g., no tag selected)
+            .join('/');
+
+        // Redirect to the constructed URL
+        window.location.href = `{{ url_for('main.file_browser', subpath='') }}${subpath}`;
+    } else {
+        alert("Upload failed!");
+    }
+});
+</script>
 {% endblock %}
