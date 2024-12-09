@@ -1,6 +1,8 @@
+from io import BytesIO
 import os
 import uuid
-from flask import current_app, flash, redirect, render_template, request, url_for
+import zipfile
+from flask import current_app, flash, redirect, render_template, request, send_file, url_for
 from app.extensions import limiter
 from . import fileIO
 from app.extensions import db, es
@@ -10,6 +12,7 @@ from flask_login import current_user, login_required
 
 @fileIO.route('/upload', methods=['GET', 'POST'])
 @login_required
+@limiter.limit('1 per minute')
 def upload_snippet():
     if request.method == 'POST':
         snippet_name = request.form.get('snippet_name', None)
@@ -21,12 +24,20 @@ def upload_snippet():
             flash("Snippet name and language are required.")
             return redirect(url_for('fileIO.upload_snippet'))
     
+
+        if ".." in snippet_name or ".." in language:
+            flash("invalid name")
+            return redirect(url_for('fileIO.upload_snippet'))
+        
         zip_file = request.files.get('file')  # This is the zipped project
         if not zip_file:
             flash("No file uploaded")
             return redirect(url_for('fileIO.upload_snippet'))
         
         target_tag = tags[0] if tags else ''
+        if ".." in target_tag:
+            flash("invalid name")
+            return redirect(url_for('fileIO.upload_snippet'))
         upload_path = os.path.join(current_app.config['UPLOAD_FOLDER'], language, target_tag)
         os.makedirs(upload_path, exist_ok=True)
 
@@ -85,10 +96,41 @@ def upload_snippet():
         es.index(index='projects_index', id=new_project.id, document=doc)
 
         flash('project uploaded successfully!')
-        return redirect(url_for('main.file_browser', subpath='/'.join(filter(None, [language, target_tag, snippet_name]))))
+        return redirect(url_for('main.file_browser', subpath=os.path.join(language, target_tag, snippet_name)))
 
 
     return render_template('upload.html')
+
+
+@fileIO.route('/download/<path:subpath>', methods=['GET'])
+@login_required
+@limiter.limit('1 per minute')
+def download_project(subpath):
+    full_path = os.path.abspath(os.path.join(current_app.config['UPLOAD_FOLDER'], subpath))
+    
+    if not full_path.startswith(os.path.abspath(current_app.config['UPLOAD_FOLDER'])):
+        return "Access denied", 403
+
+    if not os.path.isdir(full_path):
+        return "Project directory not found", 404
+
+    # Create a zip archive in memory
+    memory_file = BytesIO()
+    with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, dirs, files in os.walk(full_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                arcname = os.path.relpath(file_path, full_path)  # Relative path for zip
+                zipf.write(file_path, arcname)
+    memory_file.seek(0)
+
+    # Send the zip file to the client
+    return send_file(
+        memory_file,
+        mimetype='application/zip',
+        as_attachment=True,
+        download_name=f"{os.path.basename(full_path)}.zip"
+    )
 
 
 
