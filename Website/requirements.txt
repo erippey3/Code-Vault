@@ -13,3 +13,4 @@ whitenoise
 redis
 Flask-Session
 elasticsearch
+flask_login

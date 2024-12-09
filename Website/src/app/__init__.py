@@ -1,11 +1,8 @@
 from flask import Flask, current_app
-from app.model import User
 from config import Config
-from .extensions import limiter, db, migrate, init_es
-# from flask_dance.contrib.github import make_github_blueprint
+from .extensions import limiter, db, migrate, init_es, login_manager
 from flask_session import Session
-# from werkzeug.middleware.proxy_fix import ProxyFix
-# import os
+
 
 
 import logging
@@ -42,6 +39,7 @@ def create_app():
     session = Session(app)
 
 
+
     handler = RotatingFileHandler('logs/file_browser.log', maxBytes=10000, backupCount=1)
     handler.setLevel(logging.INFO)
     app.logger.addHandler(handler)
@@ -52,6 +50,10 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     init_es(app)
+    login_manager.init_app(app)
+
+
+
     #talisman.init_app(app)
     # talisman is causing issues 8 ways till Sunday
 

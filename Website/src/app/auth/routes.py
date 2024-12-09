@@ -1,14 +1,12 @@
 import secrets
 from urllib.parse import urlencode
 from flask import abort, redirect, request, url_for, flash, session, current_app
-# from werkzeug.security import check_password_hash, generate_password_hash
-# from flask_dance.contrib.github import github
 import requests
 from app.model import User
 from app import db
 from  . import auth
 from app.extensions import limiter
-
+from flask_login import login_user, logout_user, login_required
 
 @auth.route('/login/<provider>')
 @limiter.limit("5 per minute")
@@ -122,7 +120,7 @@ def login_callback(provider):
     # Log the user in
     session['user_id'] = user.id
     session['username'] = user.username
-    print (session.get('username'))
+    login_user(user)
     flash('Logged in successfully.')
     return redirect(url_for('main.file_browser'))
 
@@ -177,7 +175,9 @@ def login_callback(provider):
 
 
 @auth.route('/logout')
+@login_required
 def logout():
+    logout_user()
     session.pop('username', None)
     flash('You have been logged out.')
     return redirect(url_for('main.index'))
