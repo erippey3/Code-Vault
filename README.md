@@ -14,6 +14,6 @@ Mainly for the following reasons:
 
 It is possible running docker compose up --build in the Website directory may run the site, but most functionality will not work.
 
-If graders would like to see the full demo, I encourage visiting [our website](cs3704-code-vault.com).
+If graders would like to see the full demo, I encourage visiting [our website](https://cs3704-code-vault.com).
 In order to download files and upload files, the user will need to be logging into a Github account with a VT email. 
 I encourage you to try uploading something!!
